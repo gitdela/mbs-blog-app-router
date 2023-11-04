@@ -14,9 +14,8 @@ const getAllPosts = async () => {
 export async function generateStaticParams() {
   const posts = await getAllPosts();
 
-  console.log('get all posts', posts);
   return posts.results.map((post: Post) => ({
-    id: post.id,
+    slug: post.id,
   }));
 }
 
