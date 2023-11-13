@@ -47,3 +47,31 @@ export interface Author {
   name: string;
   profile_image: string;
 }
+
+export interface CoursesData {
+  count: number;
+  next: null;
+  previous: null;
+  results: CourseResult[];
+}
+
+export interface CourseResult {
+  id: string;
+  author: Author;
+  timestamps: Timestamp[];
+  title: string;
+  description: string;
+  video_url: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface Timestamp {
+  label: string;
+  time: number;
+}
+
+export interface Author {
+  name: string;
+  profile_image: string;
+}

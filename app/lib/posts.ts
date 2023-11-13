@@ -13,7 +13,8 @@ export const getCategories = async () => {
 export const useAllPosts = (
   limit?: number,
   offset?: number,
-  category?: string
+  category?: string,
+  posts?: Posts
 ) => {
   const getAllPosts = async () => {
     const res = await axios.get(apiRoutes.allPosts, {
@@ -34,18 +35,8 @@ export const useAllPosts = (
   } = useQuery<Posts>({
     queryKey: ['allPosts', limit, offset, category],
     queryFn: getAllPosts,
+    initialData: posts,
   });
 
   return { allPosts, isLoading, isFetching, refetch };
-};
-
-export const getAllPosts = async () => {
-  const res = await axios.get(apiRoutes.allPosts, {
-    // params: {
-    //   limit: limit,
-    //   offset: offset,
-    //   category: category,
-    // },
-  });
-  return res.data;
 };
