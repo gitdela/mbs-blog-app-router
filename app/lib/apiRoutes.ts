@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 export default {
   allPosts: 'https://numerousminimum.com/api/v1/blog/all/',
   featuredPost: 'https://numerousminimum.com/api/v1/blog/featured/',

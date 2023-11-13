@@ -2,7 +2,7 @@
 
 import apiRoutes from './apiRoutes';
 import { Posts } from './types';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 export const getCategories = async () => {
@@ -23,7 +23,7 @@ export const useAllPosts = (
         category: category,
       },
     });
-    return (await res).data;
+    return res.data;
   };
 
   const {
@@ -37,4 +37,15 @@ export const useAllPosts = (
   });
 
   return { allPosts, isLoading, isFetching, refetch };
+};
+
+export const getAllPosts = async () => {
+  const res = await axios.get(apiRoutes.allPosts, {
+    // params: {
+    //   limit: limit,
+    //   offset: offset,
+    //   category: category,
+    // },
+  });
+  return res.data;
 };

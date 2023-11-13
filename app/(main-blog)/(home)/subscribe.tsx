@@ -1,51 +1,74 @@
-'use client';
 
+"use client"
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import z from 'zod';
 import { toast } from 'sonner';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import apiRoutes from '../../lib/apiRoutes';
+import { SubcribeButton } from './subscribe-button';
+import submitSubscribe from '../actions/submitSubscribe';
+import { useFormState } from 'react-dom';
 
 const formState = z.object({
   email: z.string().email({ message: 'Please enter a valid email' }),
 });
 
+
+const initialState = {
+  message: null,
+  info: null
+}
+
+
+
 const Subscribe = () => {
-  type FormValues = z.infer<typeof formState>;
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(formState),
-  });
 
-  const subscribeNewsletter = async (data: FormValues) => {
-    const res = await axios.post(apiRoutes.subscribeNewsletter, {
-      ...data,
-    });
-    return res.data;
-  };
+  const [state, formAction] = useFormState(submitSubscribe, initialState)
 
-  const { mutate, isLoading } = useMutation({
-    mutationKey: ['subscribeNewsletter'],
-    mutationFn: subscribeNewsletter,
-    onSuccess: () => {
-      toast.success('Subscribed to newsletter');
-    },
-    onError: () => {
-      toast.error('Error subscribing to newsletter');
-    },
-  });
+  // type FormValues = z.infer<typeof formState>;
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm<FormValues>({
+  //   resolver: zodResolver(formState),
+  // });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    mutate(data);
-  };
+  // const subscribeNewsletter = async (data: FormValues) => {
+  //   const res = await axios.post(apiRoutes.subscribeNewsletter, {
+  //     ...data,
+  //   });
+  //   return res.data;
+  // };
+
+  // const { mutate, isPending } = useMutation({
+  //   mutationKey: ['subscribeNewsletter'],
+  //   mutationFn: subscribeNewsletter,
+  //   onSuccess: () => {
+  //     toast.success('Subscribed to newsletter');
+  //   },
+  //   onError: () => {
+  //     toast.error('Error subscribing to newsletter');
+  //   },
+  // });
+
+  // const onSubmit: SubmitHandler<FormValues> = (data) => {
+  //   mutate(data);
+  // };
+
+
+  useEffect(() => {
+    if (state?.info) {
+
+      toast.success('You have successfully subscribed to our newsletter');
+    }
+  }, [state])
+
   return (
     <div className='w-full py-10 px-4  bg-gray-50'>
       <div className='max-w-6xl mx-auto flex md:flex-row flex-col items-center'>
@@ -68,22 +91,20 @@ const Subscribe = () => {
             </p>
           </div>
           <div className='mt-5'>
-            <form onSubmit={handleSubmit(onSubmit)} className='grid gap-5'>
+            <form action={formAction} className='grid gap-5'>
               <div className='flex items-center gap-2'>
                 <input
-                  {...register('email', { required: true })}
+                  name='email'
                   className='w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200'
                   type='text'
                   placeholder='Your email address'
+                  required
                 />
-                <button className='bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300'>
-                  {' '}
-                  {isLoading ? 'Subscribing...' : 'Subscribe'}
-                </button>
+                <SubcribeButton />
               </div>
-              {errors?.email?.message && (
+              {state?.message && (
                 <div className='text-red-500 text-xs'>
-                  *{errors?.email?.message}
+                  *{state?.message}
                 </div>
               )}
 

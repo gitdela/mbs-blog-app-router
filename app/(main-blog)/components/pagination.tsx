@@ -1,19 +1,25 @@
+"use client"
+
 import clsx from 'clsx';
+import _ from 'lodash';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface PaginationProps {
   totalPosts: number | undefined;
-  nextPage: () => void;
-  previousPage: () => void;
-  limit: number;
-  offset: number;
+  limit: number
 }
 const Pagination: React.FC<PaginationProps> = ({
-  nextPage,
-  previousPage,
-  offset,
   totalPosts,
-  limit,
+  limit: mainLimit
 }) => {
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  const { replace, push } = useRouter();
+  const pathname = usePathname();
+
+  const offset = Number(searchParams.get('offset')) ?? 0;
+  const limit = Number(searchParams.get('limit')) ?? mainLimit;
+
   const scrollToTop = () => {
     const element = document.querySelector('body');
 
@@ -22,6 +28,30 @@ const Pagination: React.FC<PaginationProps> = ({
       block: 'start',
     });
   };
+
+  const next = () => {
+    if (offset < 1) {
+      console.log(offset)
+      params.set('offset', Number(mainLimit).toString());
+      params.set('limit', Number(mainLimit).toString());
+    } else {
+      params.set('offset', Number(offset + limit).toString());
+    }
+    push(`${pathname}?${params.toString()}`)
+    scrollToTop();
+  }
+  const previous = () => {
+    if (offset > 0) {
+      params.set('offset', Number(offset - limit).toString());
+      push(`${pathname}?${params.toString()}`)
+      scrollToTop();
+    }
+  }
+
+  const uniqueParams = _.uniqBy(params.entries() as any, function (e) {
+    return e;
+  })
+
 
   return (
     <div className='flex justify-center gap-1 text-sm md:justify-end'>
@@ -32,8 +62,7 @@ const Pagination: React.FC<PaginationProps> = ({
           'flex flex-col justify-center px-4 py-2 rounded-md hover:cursor-pointer bg-slate-100 hover:bg-slate-200'
         )}
         onClick={() => {
-          previousPage();
-          scrollToTop();
+          previous()
         }}
       >
         Prev
@@ -45,8 +74,7 @@ const Pagination: React.FC<PaginationProps> = ({
           'flex flex-col justify-center px-4 py-2 rounded-md hover:cursor-pointer bg-slate-100 hover:bg-slate-200'
         )}
         onClick={() => {
-          nextPage();
-          scrollToTop();
+          next()
         }}
       >
         Next

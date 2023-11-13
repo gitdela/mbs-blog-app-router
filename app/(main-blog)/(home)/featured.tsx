@@ -11,11 +11,16 @@ import apiRoutes from '../../lib/apiRoutes';
 
 export const featuredPost = async () => {
   const res = await fetch(apiRoutes.featuredPost);
+  if (!res.ok) {
+    throw new Error('Failed to fetch')
+  }
   return res.json();
 };
 
 const Featured = async () => {
   const featured = await featuredPost();
+
+  // console.log(featured, 'feat')
 
   return (
     <div className='w-full'>
