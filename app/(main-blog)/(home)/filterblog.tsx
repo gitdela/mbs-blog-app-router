@@ -29,9 +29,9 @@ import Pagination from '../components/pagination';
 
 import { useQuery } from 'react-query';
 import { cn } from '@/lib/utils';
-import { Categories } from '@/app/lib/types';
+import { Categories, Post, Posts } from '@/app/lib/types';
 
-const FilterBlog = () => {
+const FilterBlog = ({ posts, categories }: any) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // active category styling
   const [open, setOpen] = useState(false); // for categories dropdown
 
@@ -51,13 +51,15 @@ const FilterBlog = () => {
   const { allPosts: blogPosts, isLoading } = useAllPosts(
     limit,
     offset,
-    selectedCategory as string
+    selectedCategory as string,
+    posts
   );
 
   // fetching all categories
   const { data: categoryNamesData } = useQuery<Categories>({
     queryKey: ['categories'],
     queryFn: getCategories,
+    initialData: categories,
   });
 
   if (isLoading) return <Loader />;
