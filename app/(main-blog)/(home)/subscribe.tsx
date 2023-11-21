@@ -3,64 +3,19 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
-import z from 'zod';
 import { toast } from 'sonner';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import apiRoutes from '../../lib/apiRoutes';
 import { SubcribeButton } from './subscribe-button';
 import submitSubscribe from '../actions/submitSubscribe';
 import { useFormState } from 'react-dom';
-
-const formState = z.object({
-  email: z.string().email({ message: 'Please enter a valid email' }),
-});
-
 
 const initialState = {
   message: null,
   info: null
 }
 
-
-
 const Subscribe = () => {
 
   const [state, formAction] = useFormState(submitSubscribe, initialState)
-
-  // type FormValues = z.infer<typeof formState>;
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm<FormValues>({
-  //   resolver: zodResolver(formState),
-  // });
-
-  // const subscribeNewsletter = async (data: FormValues) => {
-  //   const res = await axios.post(apiRoutes.subscribeNewsletter, {
-  //     ...data,
-  //   });
-  //   return res.data;
-  // };
-
-  // const { mutate, isPending } = useMutation({
-  //   mutationKey: ['subscribeNewsletter'],
-  //   mutationFn: subscribeNewsletter,
-  //   onSuccess: () => {
-  //     toast.success('Subscribed to newsletter');
-  //   },
-  //   onError: () => {
-  //     toast.error('Error subscribing to newsletter');
-  //   },
-  // });
-
-  // const onSubmit: SubmitHandler<FormValues> = (data) => {
-  //   mutate(data);
-  // };
-
 
   useEffect(() => {
     if (state?.info) {

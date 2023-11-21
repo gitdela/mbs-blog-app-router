@@ -5,10 +5,6 @@ import Link from 'next/link';
 // import { Categories } from '@/lib/types';
 import moment from 'moment';
 import _ from 'lodash';
-
-
-import { useQuery } from '@tanstack/react-query';
-
 import apiRoutes from '@/app/lib/apiRoutes';
 import axios from 'axios';
 import Pagination from '../components/pagination';
